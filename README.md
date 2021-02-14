@@ -1,2 +1,2 @@
-# bg-reminder-bot
-Birth Day Reminder Slack Boot
+# Birth Day Reminder Slack Boot
+
