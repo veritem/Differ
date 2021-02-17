@@ -102,7 +102,7 @@ func main() {
 
 				// if a nwe message is posted send a message to general channel
 
-				_, _, err := api.PostMessage("#general", slack.MsgOptionText("Hello @verite", false))
+				_, _, err := api.PostMessage("#tests", slack.MsgOptionText("Hello @verite", false))
 
 				if err != nil {
 					fmt.Println(err)
