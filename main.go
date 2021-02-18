@@ -7,13 +7,27 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/slack-go/slack"
 	"github.com/slack-go/slack/slackevents"
 )
 
+//SchedulesMessage message types to send
+type SchedulesMessage struct {
+	text      string
+	postAt    string
+	channelID string
+}
+
 func main() {
+
+	MessageOne := SchedulesMessage{
+		text:      "Scheduled message",
+		postAt:    time.Now().Local().Add(time.Second + 1).String(),
+		channelID: "C01MYDFT51D",
+	}
 
 	tokenErr := godotenv.Load()
 
@@ -23,9 +37,15 @@ func main() {
 
 	api := slack.New(os.Getenv("SLACK_TOKEN"), slack.OptionDebug(true), slack.OptionLog(log.New(os.Stdout, "slack-bot:", log.Lshortfile|log.LstdFlags)))
 
+	// handles message scheduling
+	_, _, err := api.ScheduleMessage(MessageOne.channelID, MessageOne.postAt, slack.MsgOptionText(MessageOne.text, false))
+
+	if err != nil {
+		fmt.Println("Error while scheduling", err)
+	}
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-
 		fmt.Fprintf(w, "Hello from our bot")
 	})
 
@@ -56,8 +76,6 @@ func main() {
 
 		eventsAPI, err := slackevents.ParseEvent(json.RawMessage(body), slackevents.OptionNoVerifyToken())
 
-		// fmt.Println("Event type ", eventsAPI.Type)
-
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -86,9 +104,6 @@ func main() {
 				return
 			}
 
-			// api.PostMessage("#general", slack.MsgOptionMeMessage())
-
-			fmt.Println("Message event ", body)
 		}
 
 		if eventsAPI.Type == slackevents.CallbackEvent {
@@ -96,21 +111,21 @@ func main() {
 
 			// handle all events here
 			switch ev := innerEvent.Data.(type) {
+
 			case *slackevents.AppMentionEvent:
 				api.PostMessage(ev.Channel, slack.MsgOptionText("Hello @Makuza Mugabo Verite", false))
 			case *slackevents.MessageEvent:
-
-				// if a nwe message is posted send a message to general channel
-
 				_, _, err := api.PostMessage("#tests", slack.MsgOptionText("Hello @verite", false))
-
 				if err != nil {
 					fmt.Println(err)
 				}
 
-				// fmt.Printf("chanelId: %s, timeStamp: %s", channelID, timestamp)
+				userID := ev.User
+
+				fmt.Print("USER ID", userID)
+
 			default:
-				// fmt.Println(ev)
+				// handle defaults
 			}
 		}
 
