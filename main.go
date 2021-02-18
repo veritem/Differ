@@ -24,10 +24,8 @@ type SchedulesMessage struct {
 func main() {
 
 	MessageOne := SchedulesMessage{
-		text: "Scheduled message",
-		postAt: time.Now().Local().Add(time.Hour*time.Duration(1) +
-			time.Minute*time.Duration(1) +
-			time.Second*time.Duration(1)).String(),
+		text:      "Scheduled message",
+		postAt:    time.Now().Local().Add(time.Second + 1).String(),
 		channelID: "C01MYDFT51D",
 	}
 
@@ -43,7 +41,7 @@ func main() {
 	_, _, err := api.ScheduleMessage(MessageOne.channelID, MessageOne.postAt, slack.MsgOptionText(MessageOne.text, false))
 
 	if err != nil {
-		fmt.Println("Ërror while scheduling", err)
+		fmt.Println("Error while scheduling", err)
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
