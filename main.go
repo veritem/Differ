@@ -17,17 +17,34 @@ import (
 //SchedulesMessage message types to send
 type SchedulesMessage struct {
 	text      string
-	postAt    string
+	postAt    int64
 	channelID string
+}
+
+var schedulesMessages = map[string]SchedulesMessage{
+	"MessageOne": {
+		text:      "Scheduled at 20:13",
+		postAt:    time.Date(2021, time.February, 20, 20, 17, 0, 0, time.Local).Unix(),
+		channelID: "C01NUH9UBDW",
+	},
+	// "MessageTwo": {
+	// 	text:      "Hello 2",
+	// 	postAt:    time.Date(2021, time.February, 23, 8, 0, 0, 0, time.Local).Unix(),
+	// 	channelID: "C01MYDFT51D",
+	// },
 }
 
 func main() {
 
-	MessageOne := SchedulesMessage{
-		text:      "Scheduled message",
-		postAt:    time.Now().Local().Add(time.Second + 1).String(),
-		channelID: "C01MYDFT51D",
-	}
+	// bdTime :=
+
+	// fmt.Println(bdTime)
+
+	// MessageOne := SchedulesMessage{
+	// 	text:      "Happy Birth day <@%s>mugaboverite :tada:",
+	// 	postAt:    time.Now().Local().Add(time.Second * 30).Unix(),
+	// 	channelID: "C01MYDFT51D",
+	// }
 
 	tokenErr := godotenv.Load()
 
@@ -38,10 +55,31 @@ func main() {
 	api := slack.New(os.Getenv("SLACK_TOKEN"), slack.OptionDebug(true), slack.OptionLog(log.New(os.Stdout, "slack-bot:", log.Lshortfile|log.LstdFlags)))
 
 	// handles message scheduling
-	_, _, err := api.ScheduleMessage(MessageOne.channelID, MessageOne.postAt, slack.MsgOptionText(MessageOne.text, false))
 
-	if err != nil {
-		fmt.Println("Error while scheduling", err)
+	// return key and elements
+	for _, element := range schedulesMessages {
+
+		// fmt.Sprintf("Happy Birth day <@%s> :tada:", "mugaboverite")
+
+		_, _, err := api.ScheduleMessage(element.channelID, fmt.Sprint(element.postAt), slack.MsgOptionText(element.text, false))
+
+		if err != nil {
+			fmt.Println("Scheduling")
+		}
+
+	}
+
+	for _, element := range schedulesMessages {
+		scheduledMsg, _, err := api.GetScheduledMessages(&slack.GetScheduledMessagesParameters{
+			Channel: element.channelID,
+			Limit:   10,
+		})
+
+		fmt.Println("Schedules message", scheduledMsg)
+
+		if err != nil {
+			fmt.Println("Error while scheduling", err)
+		}
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -119,16 +157,11 @@ func main() {
 				if err != nil {
 					fmt.Println(err)
 				}
-
-				userID := ev.User
-
-				fmt.Print("USER ID", userID)
-
+				//  := ev.User
 			default:
 				// handle defaults
 			}
 		}
-
 	})
 
 	fmt.Println("[INFO] Server started listerning on port 3000")
