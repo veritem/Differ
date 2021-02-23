@@ -2,16 +2,28 @@ package lib
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/slack-go/slack"
 	"github.com/slack-go/slack/slackevents"
 )
 
 //HandleEvents handler for all of our events
 func HandleEvents(w http.ResponseWriter, r *http.Request) {
+
+	tokenErr := godotenv.Load()
+
+	if tokenErr != nil {
+		panic(tokenErr)
+	}
+
+	api := slack.New(os.Getenv("SLACK_TOKEN"), slack.OptionDebug(true), slack.OptionLog(log.New(os.Stdout, "slack-bot:", log.Lshortfile|log.LstdFlags)))
+
 	body, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
@@ -68,22 +80,22 @@ func HandleEvents(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if eventsAPI.Type == slackevents.CallbackEvent {
-		// innerEvent := eventsAPI.InnerEvent
+		innerEvent := eventsAPI.InnerEvent
 
-		// handle all events here
-		// switch ev := innerEvent.Data.(type) {
+		//handle all events here
+		switch ev := innerEvent.Data.(type) {
 
-		// case *slackevents.AppMentionEvent:
-		// 	api.PostMessage(ev.Channel, slack.MsgOptionText("Hello @Makuza Mugabo Verite", false))
-		// case *slackevents.MessageEvent:
-		// 	_, _, err := api.PostMessage("#tests", slack.MsgOptionText("Hello @verite", false))
-		// 	if err != nil {
-		// 		fmt.Println(err)
-		// 	}
-		// 	//  := ev.User
-		// default:
-		// 	// handle defaults
-		// }
-		// }
+		case *slackevents.AppMentionEvent:
+			api.PostMessage(ev.Channel, slack.MsgOptionText("Hello @Makuza Mugabo Verite", false))
+		case *slackevents.MessageEvent:
+			_, _, err := api.PostMessage("#tests", slack.MsgOptionText("Hello @verite", false))
+			if err != nil {
+				fmt.Println(err)
+			}
+			//  := ev.User
+		default:
+			// handle defaults
+		}
+
 	}
 }
