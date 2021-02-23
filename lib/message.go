@@ -19,9 +19,9 @@ type SchedulesMessage struct {
 
 var schedulesMessages = map[string]SchedulesMessage{
 	"MessageOne": {
-		text:      "Scheduled at 20:13",
-		postAt:    time.Date(2021, time.February, 23, 7, 53, 0, 0, time.Local).Unix(),
-		channelID: "C01NUH9UBDW",
+		text:      "message here",
+		postAt:    time.Date(2021, time.February, 23, 10, 50, 0, 0, time.Local).Unix(),
+		channelID: "CG3A11ZNG",
 	},
 }
 
@@ -29,7 +29,7 @@ var schedulesMessages = map[string]SchedulesMessage{
 func HandleScheduled() {
 	tokenErr := godotenv.Load()
 
-	names := "Makuza Mugabo Verite"
+	// names := "Makuza Mugabo Verite"
 
 	if tokenErr != nil {
 		log.Fatal("Error while loading .env file")
@@ -38,10 +38,11 @@ func HandleScheduled() {
 	api := slack.New(os.Getenv("SLACK_TOKEN"), slack.OptionDebug(true), slack.OptionLog(log.New(os.Stdout, "slack-bot:", log.Lshortfile|log.LstdFlags)))
 
 	for _, element := range schedulesMessages {
-		_, _, err := api.ScheduleMessage(element.channelID, fmt.Sprint(element.postAt), slack.MsgOptionText(fmt.Sprintf("Happy Day <@%s> :tada:", names), false))
-
+		_, _, err := api.ScheduleMessage(element.channelID, fmt.Sprint(element.postAt),
+			slack.MsgOptionBlocks(
+				slack.NewSectionBlock(slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("It's his Birth Day By The Way!"), false, false), nil, nil)))
 		if err != nil {
-			fmt.Println("Scheduling")
+			panic(err)
 		}
 	}
 
@@ -57,5 +58,4 @@ func HandleScheduled() {
 			fmt.Println("Error while scheduling", err)
 		}
 	}
-
 }
