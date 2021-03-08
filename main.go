@@ -19,6 +19,7 @@ func main() {
 
 	lib.HandleScheduled()
 	http.HandleFunc("/slack/events", lib.HandleEvents)
+	http.HandleFunc("/login", lib.HandleLogin)
 
 	fmt.Println("[INFO] Server started listerning on port 3000")
 	http.ListenAndServe(":3000", nil)
