@@ -99,6 +99,3 @@ func HandleEvents(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
-
-//Login Handle Login
-// func Login(w http.ResponseWriter, r *http.Request) {}
