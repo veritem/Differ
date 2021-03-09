@@ -1,4 +1,7 @@
-// package lib
+package lib
+
+//SendMessage Handle sending a message
+func SendMessage() {}
 
 // import (
 // 	"fmt"
