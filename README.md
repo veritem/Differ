@@ -1,4 +1,4 @@
-## Diff
+## Differ
 ![CI](https://github.com/makuzaverite/bd-reminder-bot/workflows/CI/badge.svg)
 
 Slack Birth day reminder for workspace's members
