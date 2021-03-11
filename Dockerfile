@@ -1,4 +1,3 @@
-
 FROM golang:1.15.0-alpine AS builder
 RUN mkdir /app
 ADD . /app

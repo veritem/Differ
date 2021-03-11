@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/joho/godotenv"
@@ -14,9 +13,10 @@ func main() {
 	tokenErr := godotenv.Load()
 
 	if tokenErr != nil {
-		log.Fatal("Error while loading .env file")
+		panic("Error while loading .env file")
 	}
 
+	//TODO: Handle Schedules
 	// lib.HandleScheduled()
 	http.HandleFunc("/slack/events", lib.HandleEvents)
 	http.HandleFunc("/login", lib.HandleLogin)
