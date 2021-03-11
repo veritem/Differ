@@ -1,4 +1,3 @@
-
 FROM golang:1.15.0-alpine AS builder
 RUN mkdir /app
 ADD . /app
@@ -15,7 +14,7 @@ RUN apk add --no-cache git make musl-dev go
 COPY --from=builder /app/main .
 
 
-# COnfigure Go
+# Configure Go
 ENV GOROOT /usr/lib/go
 ENV GOPATH /go
 ENV PATH /go/bin:$PATH
