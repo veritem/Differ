@@ -1,10 +1,9 @@
-FROM golang:1.13-alpine AS build
-WORKDIR /go/src/github.com/org/repo
-COPY . .
+FROM golang:1.16.0-alpine AS builder
 
-RUN go build -o server .
 
-FROM alpine:3.12
-EXPOSE 8000
-COPY --from=build /go/src/github.com/org/repo/server /server
-CMD ["/server"]
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
+
+RUN go build -o main .
+CMD ["/app/main"]
