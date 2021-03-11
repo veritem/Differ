@@ -1,4 +1,4 @@
-module github.com/makuzaverite/bd-reminder-bot
+module github.com/makuzaverite/Differ
 
 go 1.16
 

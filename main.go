@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/joho/godotenv"
-	"github.com/makuzaverite/bd-reminder-bot/lib"
+	"github.com/makuzaverite/Differ/lib"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 		log.Fatal("Error while loading .env file")
 	}
 
-	lib.HandleScheduled()
+	// lib.HandleScheduled()
 	http.HandleFunc("/slack/events", lib.HandleEvents)
 	http.HandleFunc("/login", lib.HandleLogin)
 	http.HandleFunc("/install", lib.HandleInstall)
