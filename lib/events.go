@@ -31,7 +31,7 @@ func HandleEvents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sToken, err := slack.NewSecretsVerifier(r.Header, os.Getenv("SIGNING_SCRET"))
+	sToken, err := slack.NewSecretsVerifier(r.Header, os.Getenv("SIGNING_SECRET"))
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -92,9 +92,12 @@ func HandleEvents(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Println(err)
 			}
+
+			fmt.Print("Hello")
 			//  := ev.User
 		default:
 			// handle defaults
+			fmt.Print("Event here")
 		}
 
 	}
