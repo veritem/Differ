@@ -17,7 +17,7 @@ services:
 
   web:
     build: .
-    env_file: ./.env
+    env_file: .env
     container_name: "differ"
     environment:
       DB_USERNAME: "postgres"
