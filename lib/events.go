@@ -64,7 +64,7 @@ func HandleEvents(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.Header().Set("Content-Type", "text")
-		w.Write([]byte(r.Challenge))
+		// w.Write([]byte(r.Challenge))
 	}
 
 	if eventsAPI.Type == slackevents.Message {
@@ -87,6 +87,7 @@ func HandleEvents(w http.ResponseWriter, r *http.Request) {
 
 		case *slackevents.AppMentionEvent:
 			api.PostMessage(ev.Channel, slack.MsgOptionText("Hello @Makuza Mugabo Verite", false))
+			break
 		case *slackevents.MessageEvent:
 			_, _, err := api.PostMessage("#tests", slack.MsgOptionText("Hello @verite", false))
 			if err != nil {
@@ -95,6 +96,7 @@ func HandleEvents(w http.ResponseWriter, r *http.Request) {
 
 			fmt.Print("Hello")
 			//  := ev.User
+			break
 		default:
 			// handle defaults
 			fmt.Print("Event here")
